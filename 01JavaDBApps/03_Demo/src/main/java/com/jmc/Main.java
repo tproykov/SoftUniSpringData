@@ -22,13 +22,13 @@ public class Main {
 
         System.out.println();
 
-        Properties props = new Properties();
+        Properties properties = new Properties();
 
-        props.setProperty("user", user);
-        props.setProperty("password", password);
+        properties.setProperty("user", user);
+        properties.setProperty("password", password);
 
         Connection connection = DriverManager
-                .getConnection("jdbc:mysql://localhost:3306/soft_uni", props);
+                .getConnection("jdbc:mysql://localhost:3306/soft_uni", properties);
 
         PreparedStatement stmt =
                 connection.prepareStatement("" +
@@ -36,10 +36,10 @@ public class Main {
 
         String salary = sc.nextLine();
         stmt.setDouble(1, Double.parseDouble(salary));
-        ResultSet rs = stmt.executeQuery();
+        ResultSet resultSet = stmt.executeQuery();
 
-        while(rs.next()){
-            System.out.println(rs.getString("first_name") + " " + rs.getString("last_name"));
+        while(resultSet.next()){
+            System.out.println(resultSet.getString("first_name") + " " + resultSet.getString("last_name"));
         }
         connection.close();
     }
