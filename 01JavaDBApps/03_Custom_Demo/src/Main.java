@@ -24,12 +24,13 @@ public class Main {
 
         ResultSet resultSet = preparedStatement.executeQuery();
 
-
         // parse results
-
-
-
+        while (resultSet.next()) {
+            String firstName = resultSet.getString("first_name");
+            String lastName = resultSet.getString("last_name");
+            String jobTitle = resultSet.getString("job_title");
+            double salary = resultSet.getDouble("salary");
+            System.out.printf("%s %s - %s  - %.2f\n", firstName, lastName, jobTitle, salary);
+        }
     }
-
-
 }
