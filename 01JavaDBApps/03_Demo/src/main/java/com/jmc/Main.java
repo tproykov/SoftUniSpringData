@@ -39,7 +39,8 @@ public class Main {
         ResultSet resultSet = stmt.executeQuery();
 
         while(resultSet.next()){
-            System.out.println(resultSet.getString("first_name") + " " + resultSet.getString("last_name"));
+            System.out.println(resultSet.getString("first_name") + " " +
+                    resultSet.getString("last_name") + " - " + resultSet.getString("job_title"));
         }
         connection.close();
     }
