@@ -1,4 +1,4 @@
-package com.jmc;
+package com.company;
 
 import java.sql.*;
 import java.util.Properties;
