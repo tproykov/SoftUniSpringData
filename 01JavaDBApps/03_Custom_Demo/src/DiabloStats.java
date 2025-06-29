@@ -1,27 +1,29 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Properties;
+import java.util.Scanner;
 
 public class DiabloStats {
 
     public static void main(String[] args) throws SQLException {
 
-        Properties props = new Properties();
-        props.setProperty("user", "root");
-        props.setProperty("password", "23081971");
+        Scanner scanner = new Scanner(System.in);
+        Connection connection = DatabaseUtil.getConnection("soft_uni");
 
-        Connection connection =
-                DriverManager.getConnection("jdbc:mysql://localhost:3306/diablo", props);
-
-
+        PreparedStatement preparedStatement = connection
+                .prepareStatement("SELECT * FROM employees WHERE salary > 100000 LIMIT 10");
+        ResultSet resultSet = preparedStatement.executeQuery();
 
 
+        // boolean hasAtLeastOneRow = resultSet.next();
+        // System.out.println(hasAtLeastOneRow);
 
-
+        // parse results
+        while (resultSet.next()) {
+            String firstName = resultSet.getString("first_name");
+            String lastName = resultSet.getString("last_name");
+            String jobTitle = resultSet.getString("job_title");
+            double salary = resultSet.getDouble("salary");
+            System.out.printf("%s %s - %s  - %.2f\n", firstName, lastName, jobTitle, salary);
+        }
     }
-
-
-
-
 }
