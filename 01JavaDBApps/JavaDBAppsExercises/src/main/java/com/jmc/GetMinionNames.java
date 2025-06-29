@@ -32,7 +32,7 @@ public class GetMinionNames {
 
         if (resultSet.next()) {
             String name = resultSet.getString("name");
-            System.out.println(name);
+            System.out.printf("Villain: %s\n", name);
             return true;
         } else {
             System.out.println("Villain with this ID does not exist.");
