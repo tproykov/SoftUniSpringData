@@ -26,7 +26,7 @@ public class AddMinion {
 
     private static int ensureTown(Connection connection, String name) throws SQLException {
         PreparedStatement selectStatement = connection.prepareStatement("""
-                SELECT *
+                SELECT t.id
                 FROM towns t
                 WHERE t.name = ?;""");
 
@@ -49,5 +49,23 @@ public class AddMinion {
         }
         System.out.printf("%s was added to the database.\n",name);
         return generatedKeys.getInt(1);
+    }
+
+    private static int ensureVillain(Connection connection, String name) throws SQLException {
+        PreparedStatement selectStatement = connection.prepareStatement("""
+                SELECT v.id
+                FROM villains v
+                WHERE v.name = ?;""");
+        selectStatement.setString(1, name);
+        ResultSet resultSet = selectStatement.executeQuery();
+        if (resultSet.next()) {
+            return resultSet.getInt("id");
+        }
+
+        PreparedStatement insertStatement = connection.prepareStatement("""
+                INSERT INTO villains (name)
+                VALUE (?);""", PreparedStatement.RETURN_GENERATED_KEYS);
+
+
     }
 }
