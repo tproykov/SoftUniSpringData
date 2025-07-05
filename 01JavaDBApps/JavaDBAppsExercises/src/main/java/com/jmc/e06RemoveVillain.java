@@ -30,6 +30,7 @@ public class e06RemoveVillain {
                 System.out.printf("%d minions released\n", releasedMinionsCount);
             } catch (SQLException e) {
                 connection.rollback();
+                throw e;
             }
         }
     }
