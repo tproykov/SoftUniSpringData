@@ -25,17 +25,29 @@ public class AddMinion {
     }
 
     private static int ensureTown(Connection connection, String name) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("""
+        PreparedStatement selectStatement = connection.prepareStatement("""
                 SELECT *
                 FROM towns t
                 WHERE t.name = ?;""");
 
-        preparedStatement.setString(1, name);
-        ResultSet resultSet = preparedStatement.executeQuery();
+        selectStatement.setString(1, name);
+        ResultSet resultSet = selectStatement.executeQuery();
         if (resultSet.next()) {
             return resultSet.getInt("id");
         }
 
-        return -1;
+        PreparedStatement insertStatement = connection.prepareStatement("""
+                INSERT INTO towns (name)
+                VALUE (?);""", PreparedStatement.RETURN_GENERATED_KEYS);
+
+        insertStatement.setString(1, name);
+        insertStatement.executeUpdate();
+
+        ResultSet generatedKeys = insertStatement.getGeneratedKeys();
+        if (!generatedKeys.next()) throw new IllegalStateException("Could not access generated key for town"); {
+
+        }
+        System.out.printf("%s was added to the database.\n",name);
+        return generatedKeys.getInt(1);
     }
 }
