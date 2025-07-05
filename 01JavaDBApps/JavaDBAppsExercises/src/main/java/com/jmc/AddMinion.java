@@ -21,7 +21,8 @@ public class AddMinion {
         Connection connection = DatabaseUtil.getConnection("minions_db");
 
         int townId = ensureTown(connection, minionTown);
-        System.out.println(townId);
+        int villainId = ensureVillain(connection, villainName);
+        System.out.println(villainId);
     }
 
     private static int ensureTown(Connection connection, String name) throws SQLException {
@@ -44,7 +45,7 @@ public class AddMinion {
         insertStatement.executeUpdate();
 
         ResultSet generatedKeys = insertStatement.getGeneratedKeys();
-        if (!generatedKeys.next()) throw new IllegalStateException("Could not access generated key for town");
+        if (!generatedKeys.next()) throw new IllegalStateException("Could not access generated key for town.");
         System.out.printf("%s was added to the database.\n",name);
         return generatedKeys.getInt(1);
     }
@@ -68,8 +69,17 @@ public class AddMinion {
         insertStatement.executeUpdate();
 
         ResultSet generatedKeys = insertStatement.getGeneratedKeys();
-        if (!generatedKeys.next()) throw new IllegalStateException("Could not access generated key for villain");
+        if (!generatedKeys.next()) throw new IllegalStateException("Could not access generated key for villain.");
         System.out.printf("%s was added to the database.\n",name);
         return generatedKeys.getInt(1);
+    }
+
+    private static int createMinion(Connection connection, String name, int age, int townId) throws SQLException {
+        PreparedStatement insertStatement = connection.prepareStatement("""
+""");
+
+
+
+
     }
 }
