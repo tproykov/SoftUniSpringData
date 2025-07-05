@@ -15,30 +15,40 @@ public class e06RemoveVillain {
 
         Connection connection = DatabaseUtil.getConnection("minions_db");
 
-        String villainName = foundVillain(connection, villainId);
+        String villainName = getVillainName(connection, villainId);
         if (villainName == null) {
             System.out.println("No such villain was found");
+        } else {
+            int releasedMinionsCount = deleteConnectedEntities(connection, villainId);
+            deleteVillain(connection, villainId);
+
+            System.out.printf("%s was deleted\n", villainName);
+            System.out.printf("%d minions released\n", releasedMinionsCount);
         }
-        else {
-
-
-
-        }
-
-
-
-
-
-
     }
 
-    private static String foundVillain(Connection connection, int villainId) throws SQLException {
-        PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM villains WHERE id = ?");
+    private static String getVillainName(Connection connection, int villainId) throws SQLException {
+        PreparedStatement selectStatement = connection.prepareStatement("SELECT name FROM villains WHERE id = ?");
         selectStatement.setInt(1, villainId);
         ResultSet resultSet = selectStatement.executeQuery();
         if (!resultSet.next()) {
             return null;
         }
         return resultSet.getString(1);
+    }
+
+    private static int deleteConnectedEntities(Connection connection, int villainId) throws SQLException {
+        PreparedStatement deleteStatement = connection.prepareStatement("""
+                DELETE FROM minions_villains WHERE villain_id = ?;""");
+        deleteStatement.setInt(1, villainId);
+        return deleteStatement.executeUpdate();
+    }
+
+    private static void deleteVillain(Connection connection, int villainId) throws SQLException {
+        PreparedStatement deleteStatement = connection.prepareStatement("""
+                DELETE FROM villains
+                WHERE id = ?;""");
+        deleteStatement.setInt(1, villainId);
+        deleteStatement.executeUpdate();
     }
 }
