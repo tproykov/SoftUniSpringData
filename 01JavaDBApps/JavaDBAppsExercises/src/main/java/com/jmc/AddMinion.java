@@ -44,9 +44,7 @@ public class AddMinion {
         insertStatement.executeUpdate();
 
         ResultSet generatedKeys = insertStatement.getGeneratedKeys();
-        if (!generatedKeys.next()) throw new IllegalStateException("Could not access generated key for town"); {
-
-        }
+        if (!generatedKeys.next()) throw new IllegalStateException("Could not access generated key for town");
         System.out.printf("%s was added to the database.\n",name);
         return generatedKeys.getInt(1);
     }
@@ -63,9 +61,15 @@ public class AddMinion {
         }
 
         PreparedStatement insertStatement = connection.prepareStatement("""
-                INSERT INTO villains (name)
-                VALUE (?);""", PreparedStatement.RETURN_GENERATED_KEYS);
+                INSERT INTO villains (name, evilness_factor)
+                VALUE (?, 'evil');""", PreparedStatement.RETURN_GENERATED_KEYS);
 
+        insertStatement.setString(1, name);
+        insertStatement.executeUpdate();
 
+        ResultSet generatedKeys = insertStatement.getGeneratedKeys();
+        if (!generatedKeys.next()) throw new IllegalStateException("Could not access generated key for villain");
+        System.out.printf("%s was added to the database.\n",name);
+        return generatedKeys.getInt(1);
     }
 }
