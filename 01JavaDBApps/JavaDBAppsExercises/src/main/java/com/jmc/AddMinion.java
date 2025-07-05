@@ -22,7 +22,10 @@ public class AddMinion {
 
         int townId = ensureTown(connection, minionTown);
         int villainId = ensureVillain(connection, villainName);
-        int minionId = createMinion(connection, minionName, minionAge, villainId);
+        int minionId = createMinion(connection, minionName, minionAge, townId);
+        connectMinionAndVillain(connection, minionId, villainId);
+
+        System.out.printf("Successfully added %s to be minion of %s.\n", minionName, villainName);
     }
 
     private static int ensureTown(Connection connection, String name) throws SQLException {
@@ -46,7 +49,7 @@ public class AddMinion {
 
         ResultSet generatedKeys = insertStatement.getGeneratedKeys();
         if (!generatedKeys.next()) throw new IllegalStateException("Could not access generated key for town.");
-        System.out.printf("%s was added to the database.\n",name);
+        System.out.printf("Town %s was added to the database.\n",name);
         return generatedKeys.getInt(1);
     }
 
@@ -70,7 +73,7 @@ public class AddMinion {
 
         ResultSet generatedKeys = insertStatement.getGeneratedKeys();
         if (!generatedKeys.next()) throw new IllegalStateException("Could not access generated key for villain.");
-        System.out.printf("%s was added to the database.\n",name);
+        System.out.printf("Villain %s was added to the database.\n",name);
         return generatedKeys.getInt(1);
     }
 
@@ -87,5 +90,15 @@ public class AddMinion {
 
         if (!generatedKeys.next()) throw new IllegalStateException("Could not access generated key for minion.");
         return generatedKeys.getInt(1);
+    }
+
+    private static void connectMinionAndVillain(Connection connection, int minionId, int villainId) throws SQLException {
+        PreparedStatement connectStatement = connection.prepareStatement("""
+                INSERT INTO minions_villains (minion_id, villain_id)
+                VALUES (?, ?);""");
+        connectStatement.setInt(1, minionId);
+        connectStatement.setInt(2, villainId);
+
+        connectStatement.executeUpdate();
     }
 }
