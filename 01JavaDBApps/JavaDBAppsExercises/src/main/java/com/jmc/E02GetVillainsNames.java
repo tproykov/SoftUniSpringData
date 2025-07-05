@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class GetVillainsNames {
+public class E02GetVillainsNames {
 
     public static void main(String[] args) throws SQLException {
 

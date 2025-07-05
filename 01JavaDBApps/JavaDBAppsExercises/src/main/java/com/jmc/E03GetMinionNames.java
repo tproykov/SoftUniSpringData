@@ -3,7 +3,7 @@ package com.jmc;
 import java.sql.*;
 import java.util.Scanner;
 
-public class GetMinionNames {
+public class E03GetMinionNames {
 
     public static void main(String[] args) throws SQLException {
 

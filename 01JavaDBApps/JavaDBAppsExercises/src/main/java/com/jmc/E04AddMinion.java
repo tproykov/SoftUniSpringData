@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class AddMinion {
+public class E04AddMinion {
 
     public static void main(String[] args) throws SQLException {
 
