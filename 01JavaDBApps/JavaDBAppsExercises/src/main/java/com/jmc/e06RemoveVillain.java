@@ -19,11 +19,18 @@ public class e06RemoveVillain {
         if (villainName == null) {
             System.out.println("No such villain was found");
         } else {
-            int releasedMinionsCount = deleteConnectedEntities(connection, villainId);
-            deleteVillain(connection, villainId);
+            connection.setAutoCommit(false);
 
-            System.out.printf("%s was deleted\n", villainName);
-            System.out.printf("%d minions released\n", releasedMinionsCount);
+            try {
+                int releasedMinionsCount = deleteConnectedEntities(connection, villainId);
+                deleteVillain(connection, villainId);
+                connection.commit();
+
+                System.out.printf("%s was deleted\n", villainName);
+                System.out.printf("%d minions released\n", releasedMinionsCount);
+            } catch (SQLException e) {
+                connection.rollback();
+            }
         }
     }
 
