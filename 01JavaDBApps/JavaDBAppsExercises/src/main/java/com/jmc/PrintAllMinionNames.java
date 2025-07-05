@@ -6,13 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 public class PrintAllMinionNames {
 
     public static void main(String[] args) throws SQLException {
 
-        Scanner scanner = new Scanner(System.in);
         Connection connection = DatabaseUtil.getConnection("minions_db");
 
         PreparedStatement preparedStatement = connection.prepareStatement("""
@@ -26,21 +24,18 @@ public class PrintAllMinionNames {
             minionNames.add(resultSet.getString(1));
         }
 
-        for (String minionName : minionNames) {
-            System.out.println(minionName);
+        List<String> orderedMinionNames = new ArrayList<>();
+        for (int i = 0; i < minionNames.size(); i++) {
+            if (i % 2 == 0) {
+                orderedMinionNames.add(minionNames.get(i / 2));
+            }
+            else {
+                orderedMinionNames.add(minionNames.get(minionNames.size() - (i + 1) / 2));
+            }
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
+        for (String minionName : orderedMinionNames) {
+            System.out.println(minionName);
+        }
     }
 }
