@@ -22,7 +22,7 @@ public class AddMinion {
 
         int townId = ensureTown(connection, minionTown);
         int villainId = ensureVillain(connection, villainName);
-        System.out.println(villainId);
+        int minionId = createMinion(connection, minionName, minionAge, villainId);
     }
 
     private static int ensureTown(Connection connection, String name) throws SQLException {
@@ -76,10 +76,16 @@ public class AddMinion {
 
     private static int createMinion(Connection connection, String name, int age, int townId) throws SQLException {
         PreparedStatement insertStatement = connection.prepareStatement("""
-""");
+                INSERT INTO minions (name, age, town_id)
+                VALUES (?, ?, ?);""", PreparedStatement.RETURN_GENERATED_KEYS);
+        insertStatement.setString(1, name);
+        insertStatement.setInt(2, age);
+        insertStatement.setInt(3, townId);
 
+        insertStatement.executeUpdate();
+        ResultSet generatedKeys = insertStatement.getGeneratedKeys();
 
-
-
+        if (!generatedKeys.next()) throw new IllegalStateException("Could not access generated key for minion.");
+        return generatedKeys.getInt(1);
     }
 }
