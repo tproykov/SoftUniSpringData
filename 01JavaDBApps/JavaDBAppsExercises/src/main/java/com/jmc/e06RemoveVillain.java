@@ -30,7 +30,10 @@ public class e06RemoveVillain {
                 System.out.printf("%d minions released\n", releasedMinionsCount);
             } catch (SQLException e) {
                 connection.rollback();
+                System.out.println("Failed to delete villain due to database error");
                 throw e;
+            } finally {
+                connection.setAutoCommit(true);
             }
         }
     }
