@@ -75,6 +75,7 @@ public class EntityManager<E> implements DbContext<E> {
                     }
                 })
                 .map(Object::toString)                                              // ["20", "2025-07-06.."]
+                .map(s -> "'" + s + "'")
                 .collect(Collectors.joining(","));                          // "20, 2025-07-06.."
     }
 
