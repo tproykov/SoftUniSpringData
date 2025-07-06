@@ -1,8 +1,11 @@
 package com.jmc.entities;
 
+import com.jmc.orm.annotations.Id;
+
 import java.time.LocalDate;
 
 public class User {
+    @Id
     private int id;
     private String username;
     private int age;
