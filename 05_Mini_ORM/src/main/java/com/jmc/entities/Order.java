@@ -16,7 +16,7 @@ public class Order {
     private double amount;
     @Column(name = "created_at")
     private LocalDate createdAt;
-    
+
     public Order() {}
 
     public Order(double amount, LocalDate createdAt) {
