@@ -10,6 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -140,8 +141,42 @@ public class EntityManager<E> implements DbContext<E> {
         // Create new object
         E resultEntity = clazz.getConstructor().newInstance();
 
-        // Fill field from result set
-        return null;
+        Arrays.stream(clazz.getDeclaredFields())
+                .filter(f -> f.isAnnotationPresent(Column.class))
+                .forEach(f -> {
+                    try {
+                        fillField(resultEntity, resultSet, f);
+                    } catch (SQLException | IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+        return resultEntity;
+    }
 
+    private void fillField(E entity, ResultSet resultSet, Field field) throws SQLException, IllegalAccessException {
+        String columnName = field.getAnnotation(Column.class).name();
+
+        String fieldValue = resultSet.getString(columnName);
+        Object value = getValueWithCorrectType(field.getType(), fieldValue);
+
+        field.setAccessible(true);
+        field.set(entity, value);
+    }
+
+    private Object getValueWithCorrectType(Class<?> type, String dbValue) {
+        if (type == int.class || type == Integer.class) {
+            return Integer.parseInt(dbValue);
+        }
+        else if (type == String.class) {
+            return dbValue;
+        }
+        else if (type == LocalDate.class) {
+            return LocalDate.parse(dbValue);
+        }
+        else if (type == double.class || type == Double.class) {
+            return Double.parseDouble(dbValue);
+        }
+
+        throw new ORMException("Unsupported data type " + type);
     }
 }
