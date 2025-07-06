@@ -1,5 +1,6 @@
 package com.jmc.orm;
 
+import com.jmc.orm.annotations.Column;
 import com.jmc.orm.annotations.Entity;
 import com.jmc.orm.annotations.Id;
 import com.jmc.orm.exceptions.ORMException;
@@ -9,6 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class EntityManager<E> implements DbContext<E> {
     private final Connection connection;
@@ -33,8 +35,8 @@ public class EntityManager<E> implements DbContext<E> {
     private boolean doInsert(E entity) throws ORMException, SQLException {
         String insertTemplate = "INSERT INTO %s (%s) VALUES (%s)";
         String tableName = getTableName(entity);
-        String columnName = entity.getClass().getSimpleName();
-        String values = String.format(insertTemplate, tableName, columnName);
+        String columnName = getColumnNamesWithoutId(entity);
+        String values = getValuesWithoutId(entity);
 
         String sql = String.format(insertTemplate, tableName, columnName, values);
 
@@ -47,6 +49,32 @@ public class EntityManager<E> implements DbContext<E> {
             throw new ORMException("Entities must have @Entity annotation");
         }
         return annotation.name();
+    }
+
+    private String getColumnNamesWithoutId(E entity) {
+        return Arrays.stream(entity.getClass()
+                .getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(Column.class))   // [orderID, amount, createdAt]
+                .filter(field -> !field.isAnnotationPresent(Id.class))      // [amount, createdAt]
+                .map(field -> field.getAnnotation(Column.class).name())     // [amount, created_at]
+                .collect(Collectors.joining(","));                       // amount, created_at
+    }
+
+    private String getValuesWithoutId(E entity) {
+        return Arrays.stream(entity
+                .getClass()
+                .getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(Column.class))
+                .filter(field -> !field.isAnnotationPresent(Id.class))
+                .map(field -> {
+                    try {
+                        return field.get(entity);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .map(Object::toString)
+                .collect(Collectors.joining(","));
     }
 
     private int getIdFieldValue(E entity, Field idField) throws IllegalAccessException {

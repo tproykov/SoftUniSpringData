@@ -9,11 +9,11 @@ import java.time.Instant;
 public class Order {
 
     @Id
-    @Column
+    @Column(name = "order_id")
     private int orderId;
-    @Column
+    @Column(name = "amount")
     private double amount;
-    @Column
+    @Column(name = "created_at")
     private Instant createdAt;
 
     public Order(double amount, Instant createdAt) {

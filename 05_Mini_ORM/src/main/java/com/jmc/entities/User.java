@@ -9,13 +9,13 @@ import java.time.LocalDate;
 @Entity(name = "users")
 public class User {
     @Id
-    @Column
+    @Column(name = "id")
     private int id;
-    @Column
+    @Column(name = "username")
     private String username;
-    @Column
+    @Column(name = "age")
     private int age;
-    @Column
+    @Column(name = "registration")
     private LocalDate registrationDate;
 
     public User(String username, int age, LocalDate registrationDate) {
