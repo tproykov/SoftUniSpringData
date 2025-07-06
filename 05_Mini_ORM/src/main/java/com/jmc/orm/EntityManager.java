@@ -11,8 +11,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class EntityManager<E> implements DbContext<E> {
@@ -104,39 +103,56 @@ public class EntityManager<E> implements DbContext<E> {
     }
 
     @Override
-    public Iterable<E> find(Class<E> clazz) {
+    public Iterable<E> find(Class<E> clazz) throws SQLException, InvocationTargetException, NoSuchMethodException,
+            InstantiationException, IllegalAccessException {
         return find(clazz, null);
     }
 
     @Override
-    public Iterable<E> find(Class<E> clazz, String where) {
-        return null;
+    public Iterable<E> find(Class<E> clazz, String where) throws SQLException, InvocationTargetException, NoSuchMethodException,
+            InstantiationException, IllegalAccessException {
+        return baseFind(clazz, where, null);
     }
 
     @Override
-    public E findFirst(Class<E> clazz) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public E findFirst(Class<E> clazz) throws SQLException, InvocationTargetException, NoSuchMethodException,
+            InstantiationException, IllegalAccessException {
         return findFirst(clazz, null);
     }
 
     @Override
     public E findFirst(Class<E> clazz, String where) throws SQLException, InvocationTargetException, NoSuchMethodException,
             InstantiationException, IllegalAccessException {
-        String selectQuery = "SELECT * FROM %s %s LIMIT 1";
-        String tableName = getTableName(clazz);
-        String computedWhere = where == null ? "" : "WHERE " + where;
+        Iterable<E> items = baseFind(clazz, where, 1);
 
-        String sql = String.format(selectQuery, tableName, computedWhere);
+        Iterator<E> iterator = items.iterator();
+        if (!iterator.hasNext()) {
+            return null;
+        }
+        return iterator.next();
+    }
+
+    private Iterable<E> baseFind(Class<E> clazz, String where, Integer limit) throws SQLException, InvocationTargetException,
+            NoSuchMethodException, InstantiationException, IllegalAccessException {
+        String selectQuery = "SELECT * FROM %s %s %s";
+        String tableName = getTableName(clazz);
+
+        String computedWhere = where == null ? "" : "WHERE " + where;
+        String computedLimit = limit == null ? "" : " LIMIT " + limit;
+
+        String sql = String.format(selectQuery, tableName, computedWhere, computedLimit);
 
         ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
 
-        boolean hasElement = resultSet.next();
-        if (!hasElement) {
-            return null;
+        List<E> iterable = new ArrayList<>();
+        while (resultSet.next()) {
+            E nextItem = fillEntity(resultSet, clazz);
+            iterable.add(nextItem);
         }
-        return fillEntity(resultSet, clazz);
+        return iterable;
     }
 
-    private E fillEntity(ResultSet resultSet, Class<E> clazz) throws SQLException, NoSuchMethodException, InvocationTargetException,
+    private E fillEntity(ResultSet resultSet, Class<E> clazz) throws NoSuchMethodException, InvocationTargetException,
             InstantiationException, IllegalAccessException {
         // Create new object
         E resultEntity = clazz.getConstructor().newInstance();
