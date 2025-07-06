@@ -1,11 +1,19 @@
 package com.jmc.entities;
 
+import com.jmc.orm.annotations.Column;
+import com.jmc.orm.annotations.Entity;
+import com.jmc.orm.annotations.Id;
 import java.time.Instant;
 
+@Entity
 public class Order {
 
+    @Id
+    @Column
     private int orderId;
+    @Column
     private double amount;
+    @Column
     private Instant createdAt;
 
     public Order(double amount, Instant createdAt) {
@@ -15,10 +23,6 @@ public class Order {
 
     public int getOrderId() {
         return orderId;
-    }
-
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
     }
 
     public double getAmount() {

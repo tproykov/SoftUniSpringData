@@ -1,14 +1,21 @@
 package com.jmc.entities;
 
+import com.jmc.orm.annotations.Column;
+import com.jmc.orm.annotations.Entity;
 import com.jmc.orm.annotations.Id;
 
 import java.time.LocalDate;
 
+@Entity
 public class User {
     @Id
+    @Column
     private int id;
+    @Column
     private String username;
+    @Column
     private int age;
+    @Column
     private LocalDate registrationDate;
 
     public User(String username, int age, LocalDate registrationDate) {

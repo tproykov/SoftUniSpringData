@@ -1,6 +1,9 @@
 package com.jmc.orm;
 
+import java.lang.reflect.Field;
 import java.sql.Connection;
+import java.util.Arrays;
+import java.util.Optional;
 
 public class EntityManager<E> implements DbContext<E> {
     private final Connection connection;
@@ -11,12 +14,25 @@ public class EntityManager<E> implements DbContext<E> {
 
     @Override
     public boolean persist(E entity) {
-        if (entity == null) {
-
-
+    //    getIdField(entity);
+    //    getFieldValue();
+        if (id == 0) {
+            return doInsert(entity);
         }
+        return doUpdate(entity);
+    }
 
-        return false;
+    private Field getIdField(E entity) {
+        Optional<Field> idField = Arrays.stream(entity
+                .getClass()
+                .getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(Id.class))
+                .findFirst();
+
+        if (idField.isEmpty()) {
+            throw new RuntimeException("Could not find id field");
+        }
+        return idField.get();
     }
 
     @Override
