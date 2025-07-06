@@ -4,6 +4,7 @@ import com.jmc.orm.annotations.Column;
 import com.jmc.orm.annotations.Entity;
 import com.jmc.orm.annotations.Id;
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Entity(name = "orders")
 public class Order {
@@ -14,9 +15,9 @@ public class Order {
     @Column(name = "amount")
     private double amount;
     @Column(name = "created_at")
-    private Instant createdAt;
+    private LocalDate createdAt;
 
-    public Order(double amount, Instant createdAt) {
+    public Order(double amount, LocalDate createdAt) {
         this.amount = amount;
         this.createdAt = createdAt;
     }
@@ -33,11 +34,11 @@ public class Order {
         this.amount = amount;
     }
 
-    public Instant getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 }
