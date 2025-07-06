@@ -60,21 +60,22 @@ public class EntityManager<E> implements DbContext<E> {
                 .collect(Collectors.joining(","));                       // amount, created_at
     }
 
-    private String getValuesWithoutId(E entity) {
+    private String getValuesWithoutId(E entity) {                                // orderId - 5, amount - 20, createdAt 2025-07-06..
         return Arrays.stream(entity
                 .getClass()
                 .getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Column.class))
-                .filter(field -> !field.isAnnotationPresent(Id.class))
-                .map(field -> {
+                .filter(field -> field.isAnnotationPresent(Column.class))   // [orderId, amount, createdAt]
+                .filter(field -> !field.isAnnotationPresent(Id.class))      // [amount, createdAt]
+                .map(field -> {                                             // [20, 2025-07-06..]
                     try {
+                        field.setAccessible(true);
                         return field.get(entity);
                     } catch (IllegalAccessException e) {
                         throw new RuntimeException(e);
                     }
                 })
-                .map(Object::toString)
-                .collect(Collectors.joining(","));
+                .map(Object::toString)                                              // ["20", "2025-07-06.."]
+                .collect(Collectors.joining(","));                          // "20, 2025-07-06.."
     }
 
     private int getIdFieldValue(E entity, Field idField) throws IllegalAccessException {
