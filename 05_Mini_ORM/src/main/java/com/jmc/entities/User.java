@@ -6,7 +6,7 @@ import com.jmc.orm.annotations.Id;
 
 import java.time.LocalDate;
 
-@Entity
+@Entity(name = "users")
 public class User {
     @Id
     @Column

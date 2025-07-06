@@ -5,7 +5,7 @@ import com.jmc.orm.annotations.Entity;
 import com.jmc.orm.annotations.Id;
 import java.time.Instant;
 
-@Entity
+@Entity(name = "orders")
 public class Order {
 
     @Id

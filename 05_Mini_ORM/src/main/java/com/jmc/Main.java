@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, IllegalAccessException {
 
         User user = new User("tproykov", 20, LocalDate.now());
         // Order order = new Order(20, LocalDate.now());
