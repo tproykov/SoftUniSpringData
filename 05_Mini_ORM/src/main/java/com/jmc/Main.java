@@ -29,7 +29,5 @@ public class Main {
 
         // System.out.println(fromDb.getUsername());
 
-
-
     }
 }
