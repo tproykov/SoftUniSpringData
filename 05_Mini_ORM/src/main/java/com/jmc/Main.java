@@ -5,6 +5,7 @@ import com.jmc.entities.User;
 import com.jmc.orm.EntityManager;
 import com.jmc.orm.MyConnector;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.Instant;
@@ -12,7 +13,7 @@ import java.time.LocalDate;
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException, IllegalAccessException {
+    public static void main(String[] args) throws SQLException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, InstantiationException {
 
         User user = new User("tproykov", 20, LocalDate.now());
         Order order = new Order(20, LocalDate.now());

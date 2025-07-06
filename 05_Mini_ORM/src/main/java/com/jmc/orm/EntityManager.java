@@ -6,7 +6,9 @@ import com.jmc.orm.annotations.Id;
 import com.jmc.orm.exceptions.ORMException;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Optional;
@@ -34,7 +36,7 @@ public class EntityManager<E> implements DbContext<E> {
 
     private boolean doInsert(E entity) throws ORMException, SQLException {
         String insertTemplate = "INSERT INTO %s (%s) VALUES (%s)";
-        String tableName = getTableName(entity);
+        String tableName = getTableName(entity.getClass());
         String columnName = getColumnNamesWithoutId(entity);
         String values = getValuesWithoutId(entity);
 
@@ -43,14 +45,15 @@ public class EntityManager<E> implements DbContext<E> {
         return this.connection.prepareStatement(sql).executeUpdate() > 0;
     }
 
-    private String getTableName(E entity) {
-        Entity annotation = entity.getClass().getAnnotation(Entity.class);
+    private String getTableName(Class<?> clazz) {
+        Entity annotation = clazz.getAnnotation(Entity.class);
         if (annotation == null) {
             throw new ORMException("Entities must have @Entity annotation");
         }
         return annotation.name();
     }
 
+    // TODO: Add default if name in @Column is missing
     private String getColumnNamesWithoutId(E entity) {
         return Arrays.stream(entity.getClass()
                 .getDeclaredFields())
@@ -101,7 +104,7 @@ public class EntityManager<E> implements DbContext<E> {
 
     @Override
     public Iterable<E> find(Class<E> clazz) {
-        return null;
+        return find(clazz, null);
     }
 
     @Override
@@ -110,12 +113,35 @@ public class EntityManager<E> implements DbContext<E> {
     }
 
     @Override
-    public E findFirst(Class<E> clazz) {
-        return null;
+    public E findFirst(Class<E> clazz) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        return findFirst(clazz, null);
     }
 
     @Override
-    public E findFirst(Class<E> clazz, String where) {
+    public E findFirst(Class<E> clazz, String where) throws SQLException, InvocationTargetException, NoSuchMethodException,
+            InstantiationException, IllegalAccessException {
+        String selectQuery = "SELECT * FROM %s %s LIMIT 1";
+        String tableName = getTableName(clazz);
+        String computedWhere = where == null ? "" : "WHERE " + where;
+
+        String sql = String.format(selectQuery, tableName, computedWhere);
+
+        ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
+
+        boolean hasElement = resultSet.next();
+        if (!hasElement) {
+            return null;
+        }
+        return fillEntity(resultSet, clazz);
+    }
+
+    private E fillEntity(ResultSet resultSet, Class<E> clazz) throws SQLException, NoSuchMethodException, InvocationTargetException,
+            InstantiationException, IllegalAccessException {
+        // Create new object
+        E resultEntity = clazz.getConstructor().newInstance();
+
+        // Fill field from result set
         return null;
+
     }
 }

@@ -18,6 +18,8 @@ public class User {
     @Column(name = "registration")
     private LocalDate registrationDate;
 
+    public User() {}
+
     public User(String username, int age, LocalDate registrationDate) {
         this.username = username;
         this.age = age;
