@@ -8,20 +8,17 @@ import java.util.Properties;
 public class MyConnector {
 
     private static final String JDBC_URL = "jdbc:mysql://localhost:3306/%s";
-    private static Connection connection;
+    private static final String USER = "root";
+    private static final String PASSWORD = "23081971";
 
-    public static void createConnection(String username, String password, String dbName) throws SQLException {
+    public static Connection getConnection(String dbName) throws SQLException {
 
         Properties props = new Properties();
-        props.setProperty("user", username);
-        props.setProperty("password", password);
+        props.setProperty("user", USER);
+        props.setProperty("password", PASSWORD);
 
         String formattedJdbc = String.format(JDBC_URL, dbName);
 
-        connection = DriverManager.getConnection(formattedJdbc, props);
-    }
-
-    public static Connection getConnection() {
-        return connection;
+        return DriverManager.getConnection(formattedJdbc, props);
     }
 }
