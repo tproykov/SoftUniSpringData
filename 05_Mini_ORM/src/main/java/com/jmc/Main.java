@@ -23,15 +23,21 @@ public class Main {
         EntityManager<User> userEm = new EntityManager<>(connection);
         EntityManager<Order> orderEm = new EntityManager<>(connection);
 
-        userEm.persist(user);
-        orderEm.persist(order);
+        // userEm.persist(user);
+        // orderEm.persist(order);
 
-        // User fromDb = userEm.findFirst(User.class, "id = 1");
+        User fromDb = userEm.findFirst(User.class, "id = 1");
         // User fromDb2 = userEm.findFirst(User.class);
 
         //System.out.println(fromDb2.getUsername());
 
-        Order first = orderEm.findFirst(Order.class);
-        System.out.println(first.getOrderId());
+        // Order first = orderEm.findFirst(Order.class);
+        // System.out.println(first.getOrderId());
+
+        // Iterable<User> users = userEm.find(User.class);
+        // users.forEach(u -> System.out.println(u.getUsername()));
+
+        fromDb.setUsername("edited");
+        userEm.persist(fromDb);
     }
 }

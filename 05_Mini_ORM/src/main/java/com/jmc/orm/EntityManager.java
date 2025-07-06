@@ -15,6 +15,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class EntityManager<E> implements DbContext<E> {
+    private static final String INSERT_QUERY = "INSERT INTO %s (%s) VALUES (%s)";
+    private static final String UPDATE_QUERY = "UPDATE %s SET %s WHERE %s";
+    private static final String SELECT_QUERY_WITH_WHERE_LIMIT = "SELECT * FROM %s %s %s";
     private final Connection connection;
 
     public EntityManager(Connection connection) {
@@ -30,17 +33,26 @@ public class EntityManager<E> implements DbContext<E> {
         if (id == 0) {
             return doInsert(entity);
         }
-        return false;
-        // return doUpdate(entity);
+        return doUpdate(entity);
     }
 
+    private boolean doUpdate(E entity) {
+        // UPDATE %s SET field=value, field=value WHERE idColumn = idValue
+        String UPDATE_QUERY = "UPDATE %s SET %s WHERE %s = %S";
+        String tableName = getTableName(entity.getClass());
+        String fieldListWithValues;
+        String idColumn = getIdField(entity);
+        String idValue = getIdFieldValue(entity, idColumn);
+
+    }
+
+
     private boolean doInsert(E entity) throws ORMException, SQLException {
-        String insertTemplate = "INSERT INTO %s (%s) VALUES (%s)";
         String tableName = getTableName(entity.getClass());
         String columnName = getColumnNamesWithoutId(entity);
         String values = getValuesWithoutId(entity);
 
-        String sql = String.format(insertTemplate, tableName, columnName, values);
+        String sql = String.format(INSERT_QUERY, tableName, columnName, values);
 
         return this.connection.prepareStatement(sql).executeUpdate() > 0;
     }
@@ -134,13 +146,13 @@ public class EntityManager<E> implements DbContext<E> {
 
     private Iterable<E> baseFind(Class<E> clazz, String where, Integer limit) throws SQLException, InvocationTargetException,
             NoSuchMethodException, InstantiationException, IllegalAccessException {
-        String selectQuery = "SELECT * FROM %s %s %s";
+        // String selectQuery = "SELECT * FROM %s %s %s";
         String tableName = getTableName(clazz);
 
         String computedWhere = where == null ? "" : "WHERE " + where;
         String computedLimit = limit == null ? "" : " LIMIT " + limit;
 
-        String sql = String.format(selectQuery, tableName, computedWhere, computedLimit);
+        String sql = String.format(SELECT_QUERY_WITH_WHERE_LIMIT, tableName, computedWhere, computedLimit);
 
         ResultSet resultSet = connection.prepareStatement(sql).executeQuery();
 
