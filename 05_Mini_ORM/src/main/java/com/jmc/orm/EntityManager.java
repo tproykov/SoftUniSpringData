@@ -43,15 +43,22 @@ public class EntityManager<E> implements DbContext<E> {
         String tableName = getTableName(entity.getClass());
         Field idColumn = getIdField(entity);
         int idValue = getIdFieldValue(entity, idColumn);
-        String fieldListWithValues;
+        String fieldListWithValues = getFieldsWithValues(entity);
 
         String sql = String.format(UPDATE_QUERY, tableName, fieldListWithValues, idColumn.getName(), idValue);
 
         return this.connection.prepareStatement(sql).executeUpdate() > 0;
+    }
 
+    private String getFieldsWithValues(E entity) throws IllegalAccessException, SQLException {
+        List<String> columnName = getColumnNamesWithoutId(entity);
+        List<String> values = getValuesWithoutId(entity);
 
-
-
+        List<String> result = new ArrayList<>();
+        for (int i = 0; i < columnName.size(); i++) {
+            result.add(columnName.get(i) + "=" + values.get(i));
+        }
+        return String.join(",", result);
     }
 
 
