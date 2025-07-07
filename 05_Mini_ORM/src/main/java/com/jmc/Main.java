@@ -37,7 +37,7 @@ public class Main {
         // Iterable<User> users = userEm.find(User.class);
         // users.forEach(u -> System.out.println(u.getUsername()));
 
-        fromDb.setUsername("edited");
+        fromDb.setUsername("edited22");
         userEm.persist(fromDb);
     }
 }
