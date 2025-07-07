@@ -36,23 +36,34 @@ public class EntityManager<E> implements DbContext<E> {
         return doUpdate(entity);
     }
 
-    private boolean doUpdate(E entity) {
+    private boolean doUpdate(E entity) throws IllegalAccessException, SQLException {
         // UPDATE %s SET field=value, field=value WHERE idColumn = idValue
         String UPDATE_QUERY = "UPDATE %s SET %s WHERE %s = %S";
+
         String tableName = getTableName(entity.getClass());
+        Field idColumn = getIdField(entity);
+        int idValue = getIdFieldValue(entity, idColumn);
         String fieldListWithValues;
-        String idColumn = getIdField(entity);
-        String idValue = getIdFieldValue(entity, idColumn);
+
+        String sql = String.format(UPDATE_QUERY, tableName, fieldListWithValues, idColumn.getName(), idValue);
+
+        return this.connection.prepareStatement(sql).executeUpdate() > 0;
+
+
+
 
     }
 
 
     private boolean doInsert(E entity) throws ORMException, SQLException {
         String tableName = getTableName(entity.getClass());
-        String columnName = getColumnNamesWithoutId(entity);
-        String values = getValuesWithoutId(entity);
+        List<String> columnName = getColumnNamesWithoutId(entity);
+        List<String> values = getValuesWithoutId(entity);
 
-        String sql = String.format(INSERT_QUERY, tableName, columnName, values);
+        String sqlValues = String.join(",", values);
+        String sqlColumns = String.join(",", columnName);
+
+        String sql = String.format(INSERT_QUERY, tableName, sqlColumns, sqlValues);
 
         return this.connection.prepareStatement(sql).executeUpdate() > 0;
     }
@@ -66,16 +77,16 @@ public class EntityManager<E> implements DbContext<E> {
     }
 
     // TODO: Add default if name in @Column is missing
-    private String getColumnNamesWithoutId(E entity) {
+    private List<String> getColumnNamesWithoutId(E entity) {
         return Arrays.stream(entity.getClass()
                 .getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Column.class))   // [orderID, amount, createdAt]
                 .filter(field -> !field.isAnnotationPresent(Id.class))      // [amount, createdAt]
                 .map(field -> field.getAnnotation(Column.class).name())     // [amount, created_at]
-                .collect(Collectors.joining(","));                       // amount, created_at
+                .toList();                                                       // amount, created_at
     }
 
-    private String getValuesWithoutId(E entity) {                                // orderId - 5, amount - 20, createdAt 2025-07-06..
+    private List<String> getValuesWithoutId(E entity) {                                // orderId - 5, amount - 20, createdAt 2025-07-06..
         return Arrays.stream(entity
                 .getClass()
                 .getDeclaredFields())
@@ -91,7 +102,7 @@ public class EntityManager<E> implements DbContext<E> {
                 })
                 .map(Object::toString)                                              // ["20", "2025-07-06.."]
                 .map(s -> "'" + s + "'")
-                .collect(Collectors.joining(","));                          // "20, 2025-07-06.."
+                .toList();                                                          // "20, 2025-07-06.."
     }
 
     private int getIdFieldValue(E entity, Field idField) throws IllegalAccessException {
