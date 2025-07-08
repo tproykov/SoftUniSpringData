@@ -26,7 +26,7 @@ public class Main {
         // userEm.persist(user);
         // orderEm.persist(order);
 
-        User fromDb = userEm.findFirst(User.class, "id = 1");
+        // User fromDb = userEm.findFirst(User.class, "id = 1");
         // User fromDb2 = userEm.findFirst(User.class);
 
         //System.out.println(fromDb2.getUsername());
@@ -37,7 +37,10 @@ public class Main {
         // Iterable<User> users = userEm.find(User.class);
         // users.forEach(u -> System.out.println(u.getUsername()));
 
-        fromDb.setUsername("edited22");
-        userEm.persist(fromDb);
+        // fromDb.setUsername("edited22");
+        // userEm.persist(fromDb);
+
+        userEm.persist(user);
+        orderEm.persist(order);
     }
 }
