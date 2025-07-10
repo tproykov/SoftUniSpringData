@@ -10,5 +10,11 @@
         <property name="hibernate.connection.url">
             jdbc:mysql://localhost:3306/school?createDatabaseIfNotExist=true
         </property>
+        <property name="hibernate.connection.username">
+            root
+        </property>
+        <property name="hibernate.connection.password">
+            23081971
+        </property>
     </session-factory>
 </hibernate-configuration>
