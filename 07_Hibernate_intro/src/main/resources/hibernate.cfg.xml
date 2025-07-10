@@ -16,5 +16,6 @@
         <property name="hibernate.connection.password">
             23081971
         </property>
+        <mapping resource="student.hbm.mapping.xml"/>
     </session-factory>
 </hibernate-configuration>
