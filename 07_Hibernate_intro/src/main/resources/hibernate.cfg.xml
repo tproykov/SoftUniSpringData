@@ -4,6 +4,6 @@
                          xsi:schemaLocation="http://www.hibernate.org/xsd/orm/cfg
                           https://www.hibernate.org/xsd/orm/cfg/hibernate-configuration-6.0.xsd">
     <session-factory>
-        <!-- Your configuration properties here -->
+        <!-- Configuration properties here -->
     </session-factory>
 </hibernate-configuration>

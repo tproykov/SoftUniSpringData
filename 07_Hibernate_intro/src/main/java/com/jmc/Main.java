@@ -1,5 +1,6 @@
 package com.jmc;
 
+import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 public class Main {
@@ -8,6 +9,8 @@ public class Main {
 
         Configuration config = new Configuration();
         config.configure("hibernate.cfg.xml");
+
+        SessionFactory sessionFactory = config.buildSessionFactory();
 
 
     }
