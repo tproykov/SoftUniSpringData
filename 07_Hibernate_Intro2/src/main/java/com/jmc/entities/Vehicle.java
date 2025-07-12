@@ -12,7 +12,7 @@ public class Vehicle {
     @Column(name="id")
     private long id;
 
-    @Column(name="model")
+    @Column(name="model", nullable=false)
     private String model;
 
     @Column(name = "price")
