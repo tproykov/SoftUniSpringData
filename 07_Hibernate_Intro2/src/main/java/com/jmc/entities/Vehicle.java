@@ -2,6 +2,8 @@ package com.jmc.entities;
 
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name="vehicle")
 public class Vehicle {
@@ -10,11 +12,44 @@ public class Vehicle {
     @Column(name="id")
     private long id;
 
+    @Column(name="model")
+    private String model;
+
+    @Column(name = "price")
+    private BigDecimal price;
+
+    @Column(name = "fuel_type")
+    private String fuelType;
+
     public long getId() {
         return id;
     }
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getFuelType() {
+        return fuelType;
+    }
+
+    public void setFuelType(String fuelType) {
+        this.fuelType = fuelType;
     }
 }
