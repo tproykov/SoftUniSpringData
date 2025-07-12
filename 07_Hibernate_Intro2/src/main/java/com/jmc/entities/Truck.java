@@ -1,5 +1,6 @@
 package com.jmc.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
@@ -7,6 +8,7 @@ import jakarta.persistence.Table;
 @Table(name = "trucks")
 public class Truck extends Vehicle {
 
+    @Column(name = "load_capacity")
     private Double loadCapacity;
 
     public Double getLoadCapacity() {
