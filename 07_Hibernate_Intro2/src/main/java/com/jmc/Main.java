@@ -38,7 +38,7 @@ public class Main {
         truck.setLoadCapacity(2.5);
         em.persist(truck);
 
-
+        em.getTransaction().commit();
 
 
         TypedQuery<Vehicle> query = em.createQuery("select v from Vehicle v", Vehicle.class);
