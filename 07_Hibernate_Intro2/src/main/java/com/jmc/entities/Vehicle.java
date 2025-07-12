@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @Table(name = "vehicles")
+@DiscriminatorColumn(name = "type")
 public abstract class Vehicle {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
