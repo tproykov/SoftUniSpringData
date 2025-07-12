@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "planes")
 public class Plane extends Vehicle {
 
     @Column(name = "passenger_capacity")
