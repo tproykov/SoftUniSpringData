@@ -1,20 +1,21 @@
 package com.jmc.entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "labels")
-public class Label extends BaseEntity {
+@Table(name = "ingredients")
+public class Ingredient extends BaseEntity {
 
     @Column(name = "name")
     private String name;
 
-    @OneToOne(mappedBy = "label", targetEntity = Shampoo.class)
-    private Shampoo shampoo;
-
     public String getName() {
         return name;
     }
+
+
 
     public void setName(String name) {
         this.name = name;

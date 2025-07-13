@@ -9,13 +9,15 @@ public class Shampoo extends BaseEntity {
     @Column(name = "brand")
     private String brand;
 
-    @OneToOne
-    @JoinColumn(name = "label_id", unique = true)
+    @OneToOne(optional = false)
+    @JoinColumn(name = "label_id", referencedColumnName = "id")
     private Label label;
 
-    @ManyToOne
-    @JoinColumn(name = "batch_id", nullable = false)
-    private ProductionBatch productionBatch;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "batch_id", nullable = false, referencedColumnName = "id")
+    private ProductionBatch batch;
+
+    
 
     public String getBrand() {
         return brand;
@@ -33,11 +35,11 @@ public class Shampoo extends BaseEntity {
         this.label = label;
     }
 
-    public ProductionBatch getProductionBatch() {
-        return productionBatch;
+    public ProductionBatch getBatch() {
+        return batch;
     }
 
-    public void setProductionBatch(ProductionBatch productionBatch) {
-        this.productionBatch = productionBatch;
+    public void setBatch(ProductionBatch productionBatch) {
+        this.batch = productionBatch;
     }
 }
