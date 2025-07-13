@@ -53,29 +53,45 @@ public class Main {
 
         Label label = new Label();
         label.setName("Smooth and long hair");
+        em.persist(label);
 
         ProductionBatch batch = new ProductionBatch();
         batch.setDate(LocalDate.now());
+        em.persist(batch);
 
         Ingredient ingredient1 = new Ingredient();
         ingredient1.setName("Salt");
+        em.persist(ingredient1);
 
         Ingredient ingredient2 = new Ingredient();
         ingredient2.setName("Lavender");
+        em.persist(ingredient2);
 
         Ingredient ingredient3 = new Ingredient();
         ingredient3.setName("Camomile");
+        em.persist(ingredient3);
 
         Shampoo shampoo = new Shampoo();
         shampoo.setBrand("The best shampoo company");
         shampoo.setLabel(label);
         shampoo.setBatch(batch);
         shampoo.setIngredients(new HashSet<Ingredient>(List.of(ingredient1, ingredient2, ingredient3)));
-        
         em.persist(shampoo);
 
-
         em.getTransaction().commit();
+
+        // Clear the PC (Persistence context)
+        em.clear();
+
+        TypedQuery<Shampoo> shampooQuery = em.createQuery("select s from Shampoo s", Shampoo.class);
+        List<Shampoo> shampoos = shampooQuery.getResultList();
+
+        for (Shampoo s : shampoos) {
+            System.out.printf("%s - %s - %s\n", s.getBrand(), s.getLabel().getName(), s.getBatch().getDate());
+        }
+
+
+
         em.close();
 
 
