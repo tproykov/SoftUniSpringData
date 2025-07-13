@@ -1,26 +1,43 @@
 package com.jmc.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "shampoo")
-public class Shampoo {
+@Table(name = "shampoos")
+public class Shampoo extends BaseEntity {
 
-    @Id
-    @Column(name = "label")
-    private String label;
+    @Column(name = "brand")
+    private String brand;
 
-    public String getLabel() {
+    @OneToOne
+    @JoinColumn(name = "label_id", unique = true)
+    private Label label;
+
+    @ManyToOne
+    @JoinColumn(name = "batch_id", nullable = false)
+    private ProductionBatch productionBatch;
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public Label getLabel() {
         return label;
     }
 
-    public void setLabel(String label) {
+    public void setLabel(Label label) {
         this.label = label;
     }
+
+    public ProductionBatch getProductionBatch() {
+        return productionBatch;
+    }
+
+    public void setProductionBatch(ProductionBatch productionBatch) {
+        this.productionBatch = productionBatch;
+    }
 }
-
-
-
