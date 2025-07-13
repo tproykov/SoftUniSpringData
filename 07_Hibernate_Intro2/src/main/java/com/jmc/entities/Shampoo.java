@@ -2,6 +2,8 @@ package com.jmc.entities;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "shampoos")
 public class Shampoo extends BaseEntity {
@@ -17,7 +19,10 @@ public class Shampoo extends BaseEntity {
     @JoinColumn(name = "batch_id", nullable = false, referencedColumnName = "id")
     private ProductionBatch batch;
 
-    
+    @ManyToMany
+    @JoinTable(joinColumns = @JoinColumn(name = "shampoo_id"),
+               inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
+    private Set<Ingredient> ingredients;
 
     public String getBrand() {
         return brand;
@@ -41,5 +46,13 @@ public class Shampoo extends BaseEntity {
 
     public void setBatch(ProductionBatch productionBatch) {
         this.batch = productionBatch;
+    }
+
+    public Set<Ingredient> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(Set<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
 }
