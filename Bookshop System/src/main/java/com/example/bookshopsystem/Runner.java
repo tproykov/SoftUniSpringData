@@ -69,7 +69,7 @@ public class Runner implements CommandLineRunner {
         EditionType editionType = EditionType.values()[Integer.parseInt(data[0])];
         LocalDate releaseDate = LocalDate.parse(data[1],
                 DateTimeFormatter.ofPattern("d/M/yyyy"));
-        Integer copies = Integer.parseInt(data[2]);
+        Long copies = Long.parseLong(data[2]);
         BigDecimal price = new BigDecimal(data[3]);
         AgeRestriction ageRestriction = AgeRestriction
                 .values()[Integer.parseInt(data[4])];
