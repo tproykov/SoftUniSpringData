@@ -11,7 +11,6 @@ import com.example.bookshopsystem.enums.AgeRestriction;
 import com.example.bookshopsystem.enums.EditionType;
 import com.example.bookshopsystem.services.AuthorService;
 import com.example.bookshopsystem.services.BookService;
-import com.example.bookshopsystem.services.BookServiceImpl;
 import com.example.bookshopsystem.services.CategoryService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
@@ -66,48 +65,36 @@ public class Runner implements CommandLineRunner {
         }
 
         List<String> bookLines = readSeedFiles("books.txt");
-        String[] data = null;
         for (String line : bookLines) {
-            data = line.split("\\s+");
-        }
+            String[] data = line.split("\\s+");
 
-        EditionType editionType = EditionType.values()[Integer.parseInt(data[0])];
-        LocalDate releaseDate = LocalDate.parse(data[1],
-                DateTimeFormatter.ofPattern("d/M/yyyy"));
-        Long copies = Long.parseLong(data[2]);
-        BigDecimal price = new BigDecimal(data[3]);
-        AgeRestriction ageRestriction = AgeRestriction
-                .values()[Integer.parseInt(data[4])];
-        String title = Arrays.stream(data)
-                .skip(5)
-                .collect(Collectors.joining(" "));
+            EditionType editionType = EditionType.values()[Integer.parseInt(data[0])];
+            LocalDate releaseDate = LocalDate.parse(data[1], DateTimeFormatter.ofPattern("d/M/yyyy"));
+            Long copies = Long.parseLong(data[2]);
+            BigDecimal price = new BigDecimal(data[3]);
+            AgeRestriction ageRestriction = AgeRestriction.values()[Integer.parseInt(data[4])];
+            String title = Arrays.stream(data).skip(5).collect(Collectors.joining(" "));
 
-        int randomAuthorIndex = ThreadLocalRandom.current().nextInt(0, authors.size());
-        Author author = authors.get(randomAuthorIndex);
+            Author author = authors.get(ThreadLocalRandom.current().nextInt(authors.size()));
 
-        int randomCategoriesCount = ThreadLocalRandom.current().nextInt(0, 3);
-        List<Category> relevantCategories = new ArrayList<>();
-        for (int i = 0; i < randomCategoriesCount; i++) {
-            int randomCategoryIndex = ThreadLocalRandom.current().nextInt(0, categories.size());
-            relevantCategories.add(categories.get(randomCategoryIndex));
-        }
+            int randomCategoriesCount = ThreadLocalRandom.current().nextInt(1, 4);
+            List<Category> relevantCategories = new ArrayList<>();
+            while (relevantCategories.size() < randomCategoriesCount) {
+                Category category = categories.get(ThreadLocalRandom.current().nextInt(categories.size()));
+                if (!relevantCategories.contains(category)) {
+                    relevantCategories.add(category);
+                }
+            }
 
-        BookInputDto inputDto = new BookInputDto(title, price, copies, editionType,
-                releaseDate, ageRestriction);
-        BookRelationsDto relationsDto = new BookRelationsDto(author, relevantCategories);
-
-        Book book = bookService.create(inputDto, relationsDto);
-    }
-
-    private List<String> readSeedFiles(String filename) throws IOException {
-        ClassPathResource resource = new ClassPathResource(filename);
-
-        try (InputStream inputStream = resource.getInputStream()) {
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-            return bufferedReader.lines().toList();
+            BookInputDto bookInputDto = new BookInputDto(title, price, copies, editionType, releaseDate, ageRestriction);
+            BookRelationsDto relationsDto = new BookRelationsDto(author, relevantCategories);
+            bookService.create(bookInputDto, relationsDto);
         }
     }
 
+    private List<String> readSeedFiles(String fileName) throws IOException {
+        InputStream inputStream = new ClassPathResource(fileName).getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        return reader.lines().collect(Collectors.toList());
+    }
 }
