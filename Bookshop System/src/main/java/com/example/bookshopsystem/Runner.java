@@ -1,6 +1,8 @@
 package com.example.bookshopsystem;
 
 import com.example.bookshopsystem.dtos.AuthorInputDto;
+import com.example.bookshopsystem.dtos.BookInputDto;
+import com.example.bookshopsystem.dtos.BookRelationsDto;
 import com.example.bookshopsystem.dtos.CategoryInputDto;
 import com.example.bookshopsystem.entities.Author;
 import com.example.bookshopsystem.entities.Book;
@@ -8,6 +10,8 @@ import com.example.bookshopsystem.entities.Category;
 import com.example.bookshopsystem.enums.AgeRestriction;
 import com.example.bookshopsystem.enums.EditionType;
 import com.example.bookshopsystem.services.AuthorService;
+import com.example.bookshopsystem.services.BookService;
+import com.example.bookshopsystem.services.BookServiceImpl;
 import com.example.bookshopsystem.services.CategoryService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.io.ClassPathResource;
@@ -23,7 +27,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -31,10 +34,12 @@ import java.util.stream.Collectors;
 public class Runner implements CommandLineRunner {
     private final CategoryService categoryService;
     private final AuthorService authorService;
+    private final BookService bookService;
 
-    public Runner(CategoryService categoryService, AuthorService authorService) {
+    public Runner(CategoryService categoryService, AuthorService authorService, BookService bookService) {
         this.categoryService = categoryService;
         this.authorService = authorService;
+        this.bookService = bookService;
     }
 
     @Override
@@ -87,11 +92,12 @@ public class Runner implements CommandLineRunner {
             relevantCategories.add(categories.get(randomCategoryIndex));
         }
 
+        BookInputDto inputDto = new BookInputDto(title, price, copies, editionType,
+                releaseDate, ageRestriction);
+        BookRelationsDto relationsDto = new BookRelationsDto(author, relevantCategories);
 
-
+        Book book = bookService.create(inputDto, relationsDto);
     }
-
-    // 2. Prepare repository files + services for seeds and queries
 
     private List<String> readSeedFiles(String filename) throws IOException {
         ClassPathResource resource = new ClassPathResource(filename);
