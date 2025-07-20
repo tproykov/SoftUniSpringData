@@ -6,6 +6,8 @@ import com.example.bookshopsystem.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.Callable;
+
 @Service
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
@@ -17,7 +19,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category create(CategoryInputDto inputDto) {
-        return null;
-    }
+        Category category = new Category();
+        category.setName(inputDto.getName());
 
+        return categoryRepository.save(category);
+    }
 }
