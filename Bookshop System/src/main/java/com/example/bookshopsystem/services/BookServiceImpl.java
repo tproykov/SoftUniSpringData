@@ -7,6 +7,8 @@ import com.example.bookshopsystem.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -32,5 +34,11 @@ public class BookServiceImpl implements BookService {
         book.setCategories(Set.copyOf(relationsDto.getCategories()));
 
         return bookRepository.save(book);
+    }
+
+    @Override
+    public List<Book> findBookReleasedAfter(int year) {
+        LocalDate date = LocalDate.of(year, 1, 1);
+        return bookRepository.findAllByReleaseDateGreaterThanEqual(date);
     }
 }

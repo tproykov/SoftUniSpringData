@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 public class Runner implements CommandLineRunner {
     private final CategoryService categoryService;
     private final AuthorService authorService;
-    private final BookService bookService;
+    private BookService bookService;
 
     public Runner(CategoryService categoryService, AuthorService authorService, BookService bookService) {
         this.categoryService = categoryService;
@@ -44,6 +44,20 @@ public class Runner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+        List<Category> categories = seedCategories();
+
+        List<Author> authors = seedAuthors();
+
+        seedBooks(authors, categories);
+
+        // First query
+        List<Book> books = bookService.findBookReleasedAfter(2000);
+        for (Book book : books) {
+            System.out.println(book.getTitle());
+        }
+    }
+
+    private List<Category> seedCategories() throws IOException {
         List<String> categoryLines = readSeedFiles("categories.txt");
         List<Category> categories = new ArrayList<>();
         for (String line : categoryLines) {
@@ -51,7 +65,10 @@ public class Runner implements CommandLineRunner {
             Category currentCategory = categoryService.create(inputDto);
             categories.add(currentCategory);
         }
+        return categories;
+    }
 
+    private List<Author> seedAuthors() throws IOException {
         List<String> authorLines = readSeedFiles("authors.txt");
         List<Author> authors = new ArrayList<>();
         for (String line : authorLines) {
@@ -63,7 +80,10 @@ public class Runner implements CommandLineRunner {
             Author currentAuthor = authorService.create(inputDto);
             authors.add(currentAuthor);
         }
+        return authors;
+    }
 
+    private void seedBooks(List<Author> authors, List<Category> categories) throws IOException {
         List<String> bookLines = readSeedFiles("books.txt");
         for (String line : bookLines) {
             String[] data = line.split("\\s+");
