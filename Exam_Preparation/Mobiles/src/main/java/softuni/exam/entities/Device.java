@@ -9,8 +9,9 @@ public class Device extends BaseEntity {
     @Column(name = "brand", nullable = false)
     private String brand;
     @Column(name = "device_type")
+    @Enumerated(EnumType.STRING)
     private DeviceType deviceType;
-    @Column(name = "models", nullable = false, unique = true)
+    @Column(name = "model", nullable = false, unique = true)
     private String model;
     @Column(name = "price")
     private Double price;
