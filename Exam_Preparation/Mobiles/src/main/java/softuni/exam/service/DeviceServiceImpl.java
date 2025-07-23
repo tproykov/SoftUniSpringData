@@ -3,6 +3,9 @@ package softuni.exam.service;
 import jakarta.xml.bind.JAXBException;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class DeviceServiceImpl implements DeviceService {
@@ -13,7 +16,9 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public String readDevicesFromFile() throws IOException {
-        return "";
+        Path path = Paths.get("src/main/java/resources.devices.xml");
+        Files.readString(src/main/java/resources/devices.xml);
+        return "src/main/java/resources/devices.xml";
     }
 
     @Override
