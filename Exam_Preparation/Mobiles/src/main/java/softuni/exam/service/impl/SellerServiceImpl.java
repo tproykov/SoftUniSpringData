@@ -50,7 +50,7 @@ public class SellerServiceImpl implements SellerService {
         for (SellerInputDto inputDto : inputDtos) {
             Seller createdSeller = create(inputDto);
             if (createdSeller == null) {
-                sb.append("Invalid seller.\n");
+                sb.append("Invalid seller\n");
             }
             else {
                 sb.append(String.format("Successfully imported seller %s %s\n",
@@ -61,9 +61,15 @@ public class SellerServiceImpl implements SellerService {
     }
 
     private Seller create(SellerInputDto inputDto) {
+
         if (!validator.isValid(inputDto)) return null;
-        Seller seller = modelMapper.map(inputDto, Seller.class);
-        repository.save(seller);
-        return seller;
+
+        try {
+            Seller seller = modelMapper.map(inputDto, Seller.class);
+            repository.save(seller);
+            return seller;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
