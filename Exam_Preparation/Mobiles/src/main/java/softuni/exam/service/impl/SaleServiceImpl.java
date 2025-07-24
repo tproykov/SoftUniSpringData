@@ -46,18 +46,20 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public String importSales() throws IOException {
-        SaleInputDto[] inputDtos = gson.fromJson(readSalesFileContent(), SaleInputDto[].class);
+        SaleInputDto[] inputDtos = gson.fromJson(readSalesFileContent(),
+                SaleInputDto[].class);
+        StringBuilder sb = new StringBuilder();
         for (SaleInputDto inputDto : inputDtos) {
             Sale createdSale = create(inputDto);
-
-
-
+            if (createdSale == null) {
+                sb.append("Invalid sale\n");
+            }
+            else {
+                sb.append(String.format("Successfully imported sale with number %s\n",
+                        createdSale.getNumber()));
+            }
         }
-
-
-
-
-        return "";
+        return sb.toString();
     }
 
     private Sale create(SaleInputDto inputDto) {
