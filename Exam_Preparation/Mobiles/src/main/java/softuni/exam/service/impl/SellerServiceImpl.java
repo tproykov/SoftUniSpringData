@@ -60,6 +60,11 @@ public class SellerServiceImpl implements SellerService {
         return sb.toString();
     }
 
+    @Override
+    public Seller getReferenceById(Long id) {
+        return repository.getReferenceById(id);
+    }
+
     private Seller create(SellerInputDto inputDto) {
 
         if (!validator.isValid(inputDto)) return null;

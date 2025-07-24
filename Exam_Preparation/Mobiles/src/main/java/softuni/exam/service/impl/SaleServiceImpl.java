@@ -5,8 +5,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import softuni.exam.dtos.SaleInputDto;
 import softuni.exam.entities.Sale;
+import softuni.exam.entities.Seller;
 import softuni.exam.repository.SaleRepository;
 import softuni.exam.service.SaleService;
+import softuni.exam.service.SellerService;
 import softuni.exam.util.ValidationUtil;
 import softuni.exam.util.ValidationUtilImpl;
 
@@ -17,15 +19,18 @@ import java.nio.file.Paths;
 
 @Service
 public class SaleServiceImpl implements SaleService {
-
+    private final SellerService sellerService;
     private final SaleRepository repository;
     private final Gson gson;
     private final ValidationUtil validator;
     private final ValidationUtilImpl validationUtilImpl;
     private final ModelMapper modelMapper;
 
-    public SaleServiceImpl(SaleRepository repository, Gson gson,
-                           ValidationUtil validator, ValidationUtilImpl validationUtilImpl, ModelMapper modelMapper) {
+    public SaleServiceImpl(SellerService sellerService, SaleRepository repository,
+                           Gson gson, ValidationUtil validator,
+                           ValidationUtilImpl validationUtilImpl,
+                           ModelMapper modelMapper) {
+        this.sellerService = sellerService;
         this.repository = repository;
         this.gson = gson;
         this.validator = validator;
@@ -67,6 +72,12 @@ public class SaleServiceImpl implements SaleService {
 
         try {
             Sale sale = modelMapper.map(inputDto, Sale.class);
+
+            Long sellerId = inputDto.getSeller();
+            if (sellerId != null) {
+                Seller seller = sellerService.getReferenceById(sellerId);
+                sale.setSeller(seller);
+            }
             repository.save(sale);
             return sale;
         } catch (Exception e) {
