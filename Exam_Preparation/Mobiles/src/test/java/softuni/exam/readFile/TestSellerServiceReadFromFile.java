@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
-import softuni.exam.service.SellerServiceImpl;
+import softuni.exam.service.impl.SellerServiceImpl;
 
 import java.io.IOException;
 

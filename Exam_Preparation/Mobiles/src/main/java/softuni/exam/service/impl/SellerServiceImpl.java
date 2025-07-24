@@ -1,7 +1,8 @@
-package softuni.exam.service;
+package softuni.exam.service.impl;
 
 import org.springframework.stereotype.Service;
 import softuni.exam.repository.SellerRepository;
+import softuni.exam.service.SellerService;
 
 import java.io.IOException;
 import java.nio.file.Files;

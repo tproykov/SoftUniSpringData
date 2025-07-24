@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import softuni.exam.repository.SellerRepository;
-import softuni.exam.service.SellerServiceImpl;
+import softuni.exam.service.impl.SellerServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 public class TestSellerServiceAreImportedFalse {

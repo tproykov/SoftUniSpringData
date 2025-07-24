@@ -1,8 +1,9 @@
-package softuni.exam.service;
+package softuni.exam.service.impl;
 
 import jakarta.xml.bind.JAXBException;
 import org.springframework.stereotype.Service;
 import softuni.exam.repository.DeviceRepository;
+import softuni.exam.service.DeviceService;
 
 import java.io.IOException;
 import java.nio.file.Files;
