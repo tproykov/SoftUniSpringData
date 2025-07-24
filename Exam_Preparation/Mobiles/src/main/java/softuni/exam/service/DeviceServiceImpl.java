@@ -2,6 +2,8 @@ package softuni.exam.service;
 
 import jakarta.xml.bind.JAXBException;
 import org.springframework.stereotype.Service;
+import softuni.exam.repository.DeviceRepository;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -9,9 +11,16 @@ import java.nio.file.Paths;
 
 @Service
 public class DeviceServiceImpl implements DeviceService {
+
+    private final DeviceRepository repository;
+
+    public DeviceServiceImpl(DeviceRepository repository) {
+        this.repository = repository;
+    }
+
     @Override
     public boolean areImported() {
-        return false;
+        return repository.count() > 0;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package softuni.exam.service;
 
 import org.springframework.stereotype.Service;
+import softuni.exam.repository.SaleRepository;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,9 +10,16 @@ import java.nio.file.Paths;
 
 @Service
 public class SaleServiceImpl implements SaleService {
+
+    private final SaleRepository repository;
+
+    public SaleServiceImpl(SaleRepository repository) {
+        this.repository = repository;
+    }
+
     @Override
     public boolean areImported() {
-        return false;
+        return repository.count() > 0;
     }
 
     @Override

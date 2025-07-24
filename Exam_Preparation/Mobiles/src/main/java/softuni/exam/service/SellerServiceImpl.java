@@ -11,15 +11,15 @@ import java.nio.file.Paths;
 @Service
 public class SellerServiceImpl implements SellerService {
 
-    private final SellerRepository sellerRepository;
+    private final SellerRepository repository;
 
-    public SellerServiceImpl(SellerRepository sellerRepository) {
-        this.sellerRepository = sellerRepository;
+    public SellerServiceImpl(SellerRepository repository) {
+        this.repository = repository;
     }
 
     @Override
     public boolean areImported() {
-        return false;
+        return repository.count() > 0;
     }
 
     @Override
