@@ -3,6 +3,9 @@ package softuni.exam.service;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 @Service
 public class SaleServiceImpl implements SaleService {
@@ -13,7 +16,8 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public String readSalesFileContent() throws IOException {
-        return "";
+        Path path = Paths.get("src/main/resources/files/json/sales.json");
+        return Files.readString(path);
     }
 
     @Override

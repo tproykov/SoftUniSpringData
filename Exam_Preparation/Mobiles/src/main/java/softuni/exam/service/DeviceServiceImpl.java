@@ -16,9 +16,8 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public String readDevicesFromFile() throws IOException {
-        Path path = Paths.get("src/main/java/resources.devices.xml");
-        Files.readString(src/main/java/resources/devices.xml);
-        return "src/main/java/resources/devices.xml";
+        Path path = Paths.get("src/main/resources/files/xml/devices.xml");
+        return Files.readString(path);
     }
 
     @Override
