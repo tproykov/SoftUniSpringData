@@ -14,13 +14,13 @@ public class XmlParserImpl implements XmlParser {
 
     public XmlParserImpl() throws JAXBException {
         JAXBContext jaxbContext = JAXBContext.newInstance(DevicesImportDto.class);
-        Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+        this.unmarshaller = jaxbContext.createUnmarshaller();
     }
 
     @Override
     public <T> T fromXml(String xml, Class<T> tClass) throws JAXBException {
         try (StringReader reader = new StringReader(xml)) {
-            return (T) unmarshaller.unmarshal(reader);
+            return (T) this.unmarshaller.unmarshal(reader);
         }
     }
 }

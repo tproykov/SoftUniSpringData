@@ -12,11 +12,13 @@ import softuni.exam.service.DeviceService;
 import softuni.exam.service.SaleService;
 import softuni.exam.util.ValidationUtil;
 import softuni.exam.util.XmlParser;
+import softuni.exam.enums.DeviceType;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @Service
 public class DeviceServiceImpl implements DeviceService {
@@ -69,7 +71,17 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public String exportDevices() {
-        return "";
+        List<Device> devices = repository.findExportable(DeviceType.SMART_PHONE,
+                1000.0, 128);
+
+        StringBuilder sb = new StringBuilder();
+        for (Device device : devices) {
+            sb.append(String.format("Device brand: %s\n", device.getBrand()));
+            sb.append(String.format("   *Model: %s\n", device.getModel()));
+            sb.append(String.format("   **Storage: %d\n", device.getStorage()));
+            sb.append(String.format("   ***Price: %.2f\n", device.getPrice()));
+        }
+        return sb.toString();
     }
 
     private Device create(DeviceInputDto inputDto) {
