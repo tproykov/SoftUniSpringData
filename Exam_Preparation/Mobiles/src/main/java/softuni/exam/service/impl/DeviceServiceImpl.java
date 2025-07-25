@@ -52,10 +52,19 @@ public class DeviceServiceImpl implements DeviceService {
     public String importDevices() throws IOException, JAXBException {
         DevicesImportDto importDto = xmlParser.fromXml(readDevicesFromFile(),
                 DevicesImportDto.class);
+        StringBuilder sb = new StringBuilder();
         for (DeviceInputDto inputDto : importDto.getInput()) {
-
+            Device createdDevice = create(inputDto);
+            if (createdDevice == null) {
+                sb.append("Invalid device\n");
+            }
+            else {
+                sb.append(String.format("Successfully imported device of type %s with " +
+                        "brand %s\n", createdDevice.getDeviceType(),
+                        createdDevice.getBrand()));
+            }
         }
-
+        return sb.toString();
     }
 
     @Override
