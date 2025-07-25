@@ -4,6 +4,7 @@ import softuni.exam.models.enums.VolcanoType;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table(name = "volcanoes")
@@ -28,6 +29,9 @@ public class Volcano extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "country_id", referencedColumnName = "id")
     private Country country;
+
+    @OneToMany(mappedBy = "volcano", fetch = FetchType.EAGER)
+    private Set<Volcanologist> volcanologists;
 
     public Country getCountry() {
         return country;

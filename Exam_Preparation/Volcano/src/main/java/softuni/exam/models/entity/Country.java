@@ -1,8 +1,7 @@
 package softuni.exam.models.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "countries")
@@ -13,6 +12,9 @@ public class Country extends BaseEntity {
 
     @Column(name = "capital")
     private String capital;
+
+    @OneToMany(mappedBy = "country", fetch = FetchType.EAGER)
+    private Set<Volcano> volcanoes;
 
     public String getName() {
         return name;
