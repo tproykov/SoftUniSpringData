@@ -1,6 +1,7 @@
 package softuni.exam.repository;
 
-// TODO:
-public interface VolcanoRepository {
+import org.springframework.stereotype.Repository;
 
+@Repository
+public interface VolcanoRepository {
 }

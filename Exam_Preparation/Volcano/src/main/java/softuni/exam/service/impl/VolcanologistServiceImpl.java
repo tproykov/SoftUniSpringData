@@ -1,6 +1,8 @@
 package softuni.exam.service.impl;
 
-// TODO: Implement all methods
+import org.springframework.stereotype.Service;
+
+@Service
 public class VolcanologistServiceImpl {
 
 }

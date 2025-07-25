@@ -1,7 +1,7 @@
 package softuni.exam.repository;
 
-// TODO:
+import org.springframework.stereotype.Repository;
+
+@Repository
 public interface VolcanologistRepository {
-
-
 }
