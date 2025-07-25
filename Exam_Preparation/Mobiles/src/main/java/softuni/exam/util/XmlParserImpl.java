@@ -4,6 +4,7 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 import org.springframework.stereotype.Component;
+import softuni.exam.dtos.DevicesImportDto;
 
 import java.io.StringReader;
 
@@ -12,8 +13,7 @@ public class XmlParserImpl implements XmlParser {
     private Unmarshaller unmarshaller;
 
     public XmlParserImpl() throws JAXBException {
-        // TODO: ...
-        JAXBContext jaxbContext = JAXBContext.newInstance();
+        JAXBContext jaxbContext = JAXBContext.newInstance(DevicesImportDto.class);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
     }
 

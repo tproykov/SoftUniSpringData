@@ -67,6 +67,11 @@ public class SaleServiceImpl implements SaleService {
         return sb.toString();
     }
 
+    @Override
+    public Sale getReferenceById(Long id) {
+        return repository.getReferenceById(id);
+    }
+
     private Sale create(SaleInputDto inputDto) {
         if (!validator.isValid(inputDto)) return null;
 
