@@ -23,7 +23,7 @@ public class Volcanologist extends BaseEntity {
     private LocalDate exploringFrom;
 
     @ManyToOne
-    @JoinColumn(name = "volcano_id", referencedColumnName = "id")
+    @JoinColumn(name = "exploring_volcano_id", referencedColumnName = "id")
     private Volcano volcano;
 
     public String getFirstName() {
