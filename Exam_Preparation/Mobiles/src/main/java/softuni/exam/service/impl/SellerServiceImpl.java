@@ -62,7 +62,7 @@ public class SellerServiceImpl implements SellerService {
 
     @Override
     public Seller getReferenceById(Long id) {
-        return repository.getReferenceById();
+        return repository.getReferenceById(id);
     }
 
     private Seller create(SellerInputDto inputDto) {
